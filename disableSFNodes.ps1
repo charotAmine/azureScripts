@@ -3,7 +3,7 @@ Function waitForNodeDisabling($nodeName)
     while(true)
     {
         $node = Get-ServiceFabricNode -NodeName $nodeName
-        if($node.status -ne [System.Fabric.Query.NodeStatus]::disabled)
+        if($node.status -eq [System.Fabric.Query.NodeStatus]::disabled)
         {
             Write-Host "Node is disabled"
             break
