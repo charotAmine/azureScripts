@@ -1,0 +1,25 @@
+param(
+    [Parameter(Mandatory = $true)]
+    [string]$serverName,
+    [Parameter(Mandatory = $true)]
+    [string]$dbName,
+    [Parameter(Mandatory = $true)]
+    [string]$sqlAdminUsername,
+    [Parameter(Mandatory = $true)]
+    [string]$sqlAdminPassword,
+    [Parameter(Mandatory = $true)]
+    [string]$pathFile
+)
+
+$ErrorActionPreference = 1
+##YOU MAY USE YOUR OWN DNS ON SERVER NAME : myserver.contoso.com
+$connectionStringWithSqlAdmin = "Server=tcp:$serverName,1433;Initial Catalog=$dbName;Persist Security Info=False;User ID=$sqlAdminUsername;Password=$sqlAdminPassword;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;"
+
+try {
+    Invoke-Sqlcmd -ConnectionString $connectionStringWithSqlAdmin -InputFile $pathFile -AbortOnError -OutputSqlErrors $true
+}
+catch {
+    $ErrorMessage = $_.Exception.Message
+    Write-Error $ErrorMessage
+    EXIT 1
+}
